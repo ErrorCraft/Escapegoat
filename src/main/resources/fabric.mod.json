@@ -3,9 +3,9 @@
 	"id": "escapegoat",
 	"version": "${version}",
 	"name": "Escapegoat",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "A mod that allows characters to be escaped in SNBT strings.",
 	"authors": [
-		"Me!"
+		"ErrorCraft"
 	],
 	"contact": {
 		"homepage": "https://github.com/ErrorCaft/Escapegoat",
@@ -16,7 +16,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"net.errorcraft.Escapegoat"
+			"net.errorcraft.escapegoat.Escapegoat"
 		]
 	},
 	"mixins": [
@@ -24,7 +24,7 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.16.10",
-		"minecraft": "~1.21.4",
+		"minecraft": ">=1.21.5-",
 		"java": ">=21"
 	},
 	"suggests": {
