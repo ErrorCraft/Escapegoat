@@ -3,6 +3,8 @@
 	"package": "net.errorcraft.escapegoat.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
+		"nbt.NbtStringExtender",
+		"nbt.StringNbtReaderExtender"
 	],
 	"injectors": {
 		"defaultRequire": 1

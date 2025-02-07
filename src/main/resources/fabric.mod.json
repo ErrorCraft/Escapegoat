@@ -16,7 +16,6 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"net.errorcraft.escapegoat.Escapegoat"
 		]
 	},
 	"mixins": [
