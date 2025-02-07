@@ -4,7 +4,7 @@ import net.errorcraft.escapegoat.CodePointReader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class PreferSurrounderCharacterEscapeRuleTest {
+class PreferSurrounderCharacterEscapeRuleTest {
     private static final int FIRST_ESCAPE_CODE_POINT = 'a';
     private static final String FIRST_ESCAPE_CODE_POINT_AS_STRING = Character.toString(FIRST_ESCAPE_CODE_POINT);
     private static final String FIRST_ESCAPED = "escaped_a";
