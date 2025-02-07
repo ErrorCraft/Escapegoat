@@ -45,6 +45,7 @@ public class StringEscapers {
     public static final StringEscaper SNBT = StringEscaper.builder('\\', "\\")
         .surrounder('\'', "'")
         .surrounder('"', "\"")
+        .strictSurroundEscape()
         .build();
 
     private StringEscapers() {}

@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import java.nio.charset.StandardCharsets;
 import java.util.function.IntPredicate;
 
-public record UnicodeEscapeRule(String prefixCodePoint, String suffixCodePoint, Transformation transformation, Format format, int minLength, int maxLength, int maxCodePoint, IntPredicate isForcedCodePoint) implements EscapeRule {
+public record UnicodeEscapeRule(String prefix, String suffix, Transformation transformation, Format format, int minLength, int maxLength, int maxCodePoint, IntPredicate isForcedCodePoint) implements EscapeRule {
     public UnicodeEscapeRule {
         if (maxCodePoint > Character.MAX_CODE_POINT) {
             throw new IllegalArgumentException("Code point " + maxCodePoint + " is above the maximum: " + Character.MAX_CODE_POINT);
@@ -40,14 +40,14 @@ public record UnicodeEscapeRule(String prefixCodePoint, String suffixCodePoint, 
     @Override
     public @Nullable String unescaped(CodePointReader reader, Integer surrounderCodePoint) throws UnescapeStringException {
         int start = reader.index();
-        if (!reader.trySkipNext(this.prefixCodePoint)) {
+        if (!reader.trySkipNext(this.prefix)) {
             return null;
         }
         int read = this.format.read(reader, this.minLength, this.maxLength);
         if (read > this.maxCodePoint) {
             throw new UnescapeStringException("Code point must be at most " + this.maxCodePoint + ": " + read);
         }
-        if (!reader.trySkipNext(this.suffixCodePoint)) {
+        if (!reader.trySkipNext(this.suffix)) {
             reader.index(start);
             return null;
         }
@@ -63,12 +63,12 @@ public record UnicodeEscapeRule(String prefixCodePoint, String suffixCodePoint, 
         String[] result = this.transformation.escape(codePoint, this.format);
         for (int i = 0; i < result.length; i++) {
             StringBuilder builder = new StringBuilder();
-            if (this.prefixCodePoint != null) {
-                builder.append(this.prefixCodePoint);
+            if (this.prefix != null) {
+                builder.append(this.prefix);
             }
             builder.append(this.padStringIfNecessary(result[i]));
-            if (this.suffixCodePoint != null) {
-                builder.append(this.suffixCodePoint);
+            if (this.suffix != null) {
+                builder.append(this.suffix);
             }
             result[i] = builder.toString();
         }
@@ -162,8 +162,8 @@ public record UnicodeEscapeRule(String prefixCodePoint, String suffixCodePoint, 
     }
 
     public static class Builder {
-        private String prefixCodePoint;
-        private String suffixCodePoint;
+        private String prefix;
+        private String suffix;
         private Transformation transformation = Transformation.UTF32;
         private Format format = Format.DECIMAL;
         private int minLength = 1;
@@ -176,16 +176,16 @@ public record UnicodeEscapeRule(String prefixCodePoint, String suffixCodePoint, 
         }
 
         public UnicodeEscapeRule build() {
-            return new UnicodeEscapeRule(this.prefixCodePoint, this.suffixCodePoint, this.transformation, this.format, this.minLength, this.maxLength, this.maxCodePoint, this.isForcedCodePoint);
+            return new UnicodeEscapeRule(this.prefix, this.suffix, this.transformation, this.format, this.minLength, this.maxLength, this.maxCodePoint, this.isForcedCodePoint);
         }
 
-        public Builder prefix(String prefixCodePoint) {
-            this.prefixCodePoint = prefixCodePoint;
+        public Builder prefix(String prefix) {
+            this.prefix = prefix;
             return this;
         }
 
-        public Builder suffix(String suffixCodePoint) {
-            this.suffixCodePoint = suffixCodePoint;
+        public Builder suffix(String suffix) {
+            this.suffix = suffix;
             return this;
         }
 

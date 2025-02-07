@@ -3,6 +3,7 @@ package net.errorcraft.escapegoat;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import net.errorcraft.escapegoat.rule.CharacterEscapeRule;
 import net.errorcraft.escapegoat.rule.EscapeRule;
+import net.errorcraft.escapegoat.rule.PreferSurrounderCharacterEscapeRule;
 import net.errorcraft.escapegoat.rule.UnicodeEscapeRule;
 import org.jetbrains.annotations.Nullable;
 
@@ -204,6 +205,7 @@ public class StringEscaper {
         private final String escapePrefixString;
         private Integer escapeSuffixCodePoint;
         private final List<EscapeRule> escapeRules = new ArrayList<>();
+        private boolean strictSurroundEscape;
 
         private Builder(int escapePrefixCodePoint, String escapePrefixString) {
             this.escapePrefixCodePoint = escapePrefixCodePoint;
@@ -212,7 +214,11 @@ public class StringEscaper {
 
         public StringEscaper build() {
             List<EscapeRule> allEscapeRules = new ArrayList<>();
-            this.surrounderCodePoints.forEach((codePoint, escaped) -> allEscapeRules.add(CharacterEscapeRule.ofAlwaysEscape(codePoint, escaped)));
+            if (this.strictSurroundEscape) {
+                allEscapeRules.add(PreferSurrounderCharacterEscapeRule.of(this.surrounderCodePoints));
+            } else {
+                this.surrounderCodePoints.forEach((codePoint, escaped) -> allEscapeRules.add(CharacterEscapeRule.ofAlwaysEscape(codePoint, escaped)));
+            }
             allEscapeRules.add(CharacterEscapeRule.ofAlwaysEscape(this.escapePrefixCodePoint, this.escapePrefixString));
             allEscapeRules.addAll(this.escapeRules);
             return new StringEscaper(this.surrounderCodePoints.keySet().toIntArray(), this.escapePrefixCodePoint, this.escapeSuffixCodePoint, allEscapeRules.toArray(EscapeRule[]::new));
@@ -220,6 +226,11 @@ public class StringEscaper {
 
         public Builder suffix(int codePoint) {
             this.escapeSuffixCodePoint = codePoint;
+            return this;
+        }
+
+        public Builder strictSurroundEscape() {
+            this.strictSurroundEscape = true;
             return this;
         }
 
