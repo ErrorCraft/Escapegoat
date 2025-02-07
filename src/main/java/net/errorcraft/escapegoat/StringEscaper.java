@@ -155,14 +155,22 @@ public class StringEscaper {
     }
 
     private String unescape(CodePointReader reader, Integer surrounder, int codePoint, int index) throws UnescapeStringException {
+        UnescapeStringException caught = null;
+        int start = reader.index();
         for (EscapeRule escapeRule : this.escapeRules) {
-            @Nullable String unescaped = escapeRule.unescaped(reader, surrounder);
-            if (unescaped == null) {
-                continue;
+            try {
+                @Nullable String unescaped = escapeRule.unescaped(reader, surrounder);
+                if (unescaped == null) {
+                    continue;
+                }
+                return unescaped;
+            } catch (UnescapeStringException e) {
+                caught = e;
+                reader.index(start);
             }
-            return unescaped;
         }
-        throw new UnescapeStringException("Invalid escape sequence " + CodePointUtil.toString(this.escapePrefixCodePoint, codePoint, this.escapeSuffixCodePoint) + " at position " + index);
+        String caughtMessage = caught == null ? "" : ": " + caught.getMessage();
+        throw new UnescapeStringException("Invalid escape sequence " + CodePointUtil.toString(this.escapePrefixCodePoint, codePoint, this.escapeSuffixCodePoint) + " at position " + index + caughtMessage);
     }
 
     private String escapeIfNecessary(int codePoint, Integer surrounderCodePoint) {

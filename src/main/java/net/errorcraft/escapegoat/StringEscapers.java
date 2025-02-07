@@ -46,6 +46,20 @@ public class StringEscapers {
         .surrounder('\'', "'")
         .surrounder('"', "\"")
         .strictSurroundEscape()
+        .rule(CharacterEscapeRule.ofAlwaysEscape('\n', "n"))
+        .rule(UnicodeEscapeRule.builder(Character::isISOControl)
+            .prefix("u")
+            .transformation(UnicodeEscapeRule.Transformation.UTF16)
+            .format(UnicodeEscapeRule.Format.HEXADECIMAL)
+            .length(4)
+            .build())
+        .rule(UnicodeEscapeRule.builder(codePoint -> false)
+            .prefix("u{")
+            .suffix("}")
+            .transformation(UnicodeEscapeRule.Transformation.UTF32)
+            .format(UnicodeEscapeRule.Format.HEXADECIMAL)
+            .maxLength(6)
+            .build())
         .build();
 
     private StringEscapers() {}

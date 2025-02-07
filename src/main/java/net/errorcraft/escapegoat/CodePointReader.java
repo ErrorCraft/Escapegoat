@@ -50,7 +50,7 @@ public class CodePointReader {
             foundCodePoints++;
         }
         if (foundCodePoints < minLength) {
-            throw new UnescapeStringException("Sequence must be at least " + minLength + " code points long, got " + foundCodePoints + " instead: " + builder);
+            throw new UnescapeStringException("Sequence must be at least " + minLength + " code point(s) long, got " + foundCodePoints + " instead: " + builder);
         }
         this.index += foundCodePoints;
         return builder.toString();
