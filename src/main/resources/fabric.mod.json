@@ -11,7 +11,7 @@
 		"homepage": "https://github.com/ErrorCaft/Escapegoat",
 		"sources": "https://github.com/ErrorCaft/Escapegoat"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/escapegoat/icon.png",
 	"environment": "*",
 	"entrypoints": {
